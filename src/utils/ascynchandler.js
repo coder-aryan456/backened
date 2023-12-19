@@ -1,11 +1,9 @@
 const asynchandler = (requesthadler) => {
-    (req, res, next) => {
-        Promise.resolve(requesthadler(req,res,next)).catch((err)=> next(err))
+   return (req, res, next) => {
+        Promise.resolve(requesthadler(req, res, next)).catch((err) => next(err))
     }
- }
-
-
-
+}
+ 
 export { asynchandler }
 
 // const asynchandler = (fn) => async (req, res, next) => {
