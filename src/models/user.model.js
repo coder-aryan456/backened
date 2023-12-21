@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import { jwt } from "jsonwebtoken";
+import pkg from "jsonwebtoken";
+const { jwt } = pkg;
 import bcrypt from "bcrypt";
 const userschema = new Schema({
     username: {
@@ -49,7 +50,7 @@ const userschema = new Schema({
 userschema.pre("save", async function (next) {
     // its a hook thats run before save the data in database like encypt the password then save in databse
     if (!this.isModified("password")) return next();
-    this.password = bcrypt.hash(this.password, 10)
+    this.password = await bcrypt.hash(this.password, 10)
     next()
 })
 userschema.method.isPasswordCorrect = async function (password) {
