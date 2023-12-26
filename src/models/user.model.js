@@ -1,6 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import pkg from "jsonwebtoken";
-const { jwt } = pkg;
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 const userschema = new Schema({
     username: {
@@ -53,16 +52,19 @@ userschema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, 10)
     next()
 })
-userschema.method.isPasswordCorrect = async function (password) {
+
+userschema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password)
 }
-userschema.method.generateAccesstoken = function () {
+
+
+userschema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
             _id: this._id,
             email: this.email,
             username: this.username,
-            fullName: this.fullname
+            fullName: this.fullName
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -70,16 +72,16 @@ userschema.method.generateAccesstoken = function () {
         }
     )
 }
-userschema.method.generateRefreshtoken = function () {
+userschema.methods.generateRefreshToken = function(){
     return jwt.sign(
         {
-            _id: this._id,
+            _id: this._id,  
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }
     )
- }
+}
 export const User = mongoose.model("User", userschema)
 // jwt is a bearer token
