@@ -39,6 +39,5 @@ const videSchema = new Schema(
         timestamps: true
     }
 )
-// VideSchema.plugin(mongooseAggregatePaginate)
-
+videSchemaideSchema.plugin(mongooseAggregatePaginate)
 export const Video = mongoose.model("Video", videSchema)
